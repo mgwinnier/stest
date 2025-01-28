@@ -8,7 +8,7 @@ import time
 import random
 import cv2
 import numpy as np
-from xvfbwrapper import Xvfb  # Use Xvfb instead of Xephyr
+from xvfbwrapper import Xvfb
 
 # Directory to save screenshots
 SCREENSHOT_DIR = "screenshots"
@@ -19,16 +19,16 @@ vdisplay = Xvfb(width=1280, height=720)
 vdisplay.start()
 
 
-def jitter_mouse(driver, element, duration=8):
+def jitter_mouse(driver, element, duration=12):
     """Simulate human-like mouse movements during a press-and-hold action."""
     action = ActionChains(driver)
     start_time = time.time()
 
     while time.time() - start_time < duration:
-        offset_x = random.randint(-5, 5)
-        offset_y = random.randint(-5, 5)
+        offset_x = random.randint(-8, 8)  # Larger jitter for more human-like movement
+        offset_y = random.randint(-8, 8)
         action.move_to_element_with_offset(element, offset_x, offset_y).perform()
-        time.sleep(random.uniform(0.1, 0.3))
+        time.sleep(random.uniform(0.2, 0.5))  # Longer pauses
 
 
 def click_to_left_of_element(driver, element, offset=-180, wait_time=2):
@@ -76,7 +76,7 @@ def solve_captcha(driver):
             )
             print("Press Again button detected, clicking now...")
             press_again_button.click()
-            time.sleep(3)
+            time.sleep(5)
             print("Clicked Press Again button.")
             return True
         except:
@@ -86,22 +86,22 @@ def solve_captcha(driver):
 
     print("Trying Press-and-Hold CAPTCHA...")
     try:
-        captcha_element = WebDriverWait(driver, 5).until(
+        captcha_element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.ID, "px-captcha"))
         )
         print("Press-and-hold CAPTCHA detected, attempting to solve...")
 
         action = ActionChains(driver)
         action.click_and_hold(captcha_element).perform()
-        jitter_mouse(driver, captcha_element, duration=random.uniform(6, 12))
+        jitter_mouse(driver, captcha_element, duration=random.uniform(10, 15))  # Hold for longer
         action.release(captcha_element).perform()
-        time.sleep(3)
+        time.sleep(5)
 
         if "Press & Hold to confirm" not in driver.page_source:
             print("CAPTCHA solved successfully.")
             return True
-    except:
-        print("Failed to solve CAPTCHA.")
+    except Exception as e:
+        print(f"Failed to solve CAPTCHA: {e}")
     
     return False
 
@@ -112,7 +112,7 @@ def fetch_product_data(driver, url):
         driver.get(url)
 
         try:
-            product_name_element = WebDriverWait(driver, 5).until(
+            product_name_element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, 'h1[data-at="product-name-title"]'))
             )
             product_name = product_name_element.text.strip()
@@ -125,7 +125,7 @@ def fetch_product_data(driver, url):
                 print("Failed to solve CAPTCHA, skipping this URL.")
                 return None
             try:
-                product_name_element = WebDriverWait(driver, 5).until(
+                product_name_element = WebDriverWait(driver, 10).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, 'h1[data-at="product-name-title"]'))
                 )
                 product_name = product_name_element.text.strip()
