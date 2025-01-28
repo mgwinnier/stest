@@ -1,0 +1,6 @@
+undetected-chromedriver
+selenium
+pyvirtualdisplay
+opencv-python
+numpy
+Pillow
