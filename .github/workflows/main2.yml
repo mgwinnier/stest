@@ -14,6 +14,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
     - name: Install dependencies
       run: |
         sudo apt-get update
@@ -23,3 +28,10 @@ jobs:
 
     - name: Run Selenium script
       run: xvfb-run python script.py
+
+    - name: Upload screenshots
+      if: always()  # Ensure this runs even if the script fails
+      uses: actions/upload-artifact@v3
+      with:
+        name: screenshots
+        path: screenshots/  # Path to the folder containing screenshots
