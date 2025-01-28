@@ -14,17 +14,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.9"
-
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y xvfb x11-utils xserver-xephyr
+        sudo apt-get install -y xvfb
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Run Selenium script
-      run: python script.py
+      run: xvfb-run python script.py

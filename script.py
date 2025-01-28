@@ -8,15 +8,15 @@ import time
 import random
 import cv2
 import numpy as np
-from pyvirtualdisplay import Display
+from xvfbwrapper import Xvfb  # Use Xvfb instead of Xephyr
 
 # Directory to save screenshots
 SCREENSHOT_DIR = "screenshots"
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
-# Start a virtual display for non-headless mode
-display = Display(visible=1, size=(1280, 720))  # Keep visible=1 to simulate a GUI environment
-display.start()
+# Start a virtual display with Xvfb
+vdisplay = Xvfb(width=1280, height=720)
+vdisplay.start()
 
 
 def jitter_mouse(driver, element, duration=8):
@@ -185,7 +185,7 @@ def main():
                 )
     finally:
         driver.quit()
-        display.stop()
+        vdisplay.stop()
 
 
 if __name__ == "__main__":
