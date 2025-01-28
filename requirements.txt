@@ -4,3 +4,4 @@ pyvirtualdisplay
 opencv-python
 numpy
 Pillow
+xvfbwrapper
