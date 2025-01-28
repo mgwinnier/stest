@@ -14,9 +14,10 @@ from pyvirtualdisplay import Display
 SCREENSHOT_DIR = "screenshots"
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
-# Start a virtual display for non-headless operation
-display = Display(visible=1, size=(1280, 720))
+# Start a virtual display for non-headless mode
+display = Display(visible=1, size=(1280, 720))  # Keep visible=1 to simulate a GUI environment
 display.start()
+
 
 def jitter_mouse(driver, element, duration=8):
     """Simulate human-like mouse movements during a press-and-hold action."""
@@ -28,6 +29,7 @@ def jitter_mouse(driver, element, duration=8):
         offset_y = random.randint(-5, 5)
         action.move_to_element_with_offset(element, offset_x, offset_y).perform()
         time.sleep(random.uniform(0.1, 0.3))
+
 
 def click_to_left_of_element(driver, element, offset=-180, wait_time=2):
     """Click slightly to the left of the given element and save a screenshot."""
@@ -51,6 +53,7 @@ def click_to_left_of_element(driver, element, offset=-180, wait_time=2):
     action = ActionChains(driver)
     action.move_by_offset(click_x - driver.execute_script("return window.scrollX;"),
                           click_y - driver.execute_script("return window.scrollY;")).click().perform()
+
 
 def solve_captcha(driver):
     """Check for the accessibility button first, then solve CAPTCHA."""
